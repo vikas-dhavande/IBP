@@ -8,5 +8,16 @@ Route::get('/', function () {
     if (file_exists($src) && !file_exists($dest)) {
         @copy($src, $dest);
     }
+    
+    // Copy system.css from Downloads/halo/css
+    $srcCss = 'C:/Users/vikas/Downloads/halo/css/system.css';
+    $destCss = public_path('css/system.css');
+    if (file_exists($srcCss)) {
+        if (!is_dir(public_path('css'))) {
+            @mkdir(public_path('css'), 0755, true);
+        }
+        @copy($srcCss, $destCss);
+    }
+    
     return view('welcome');
 });
