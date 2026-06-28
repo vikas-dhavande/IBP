@@ -1,0 +1,61 @@
+name: Deploy Laravel to Hostinger
+
+on:
+  push:
+    branches:
+      - main # Change this if your main branch has a different name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3' # Hostinger is set to 8.3
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo
+          coverage: none
+
+      - name: Install Dependencies (Composer)
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Install NPM Dependencies & Build (Optional)
+        run: |
+          npm install
+          npm run build
+        # Remove this step if you don't use NPM/Vite or prefer building on the server
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USERNAME }}
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          port: ${{ secrets.HOSTINGER_PORT }}
+          script: |
+            # Navigate to the correct directory (update to your actual path on Hostinger)
+            cd public_html/your-laravel-folder 
+            
+            # Put application in maintenance mode
+            php artisan down || true
+            
+            # Pull the latest changes from git
+            git pull origin main
+            
+            # Install/update composer dependencies
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            
+            # Clear caches
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+            
+            # Run migrations
+            php artisan migrate --force
+            
+            # Bring application out of maintenance mode
+            php artisan up
