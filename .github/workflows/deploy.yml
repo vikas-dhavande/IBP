@@ -20,7 +20,7 @@ jobs:
           coverage: none
 
       - name: Install Dependencies (Composer)
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
 
       - name: Install NPM Dependencies & Build (Optional)
         run: |
@@ -37,7 +37,7 @@ jobs:
           port: ${{ secrets.HOSTINGER_PORT }}
           script: |
             # Navigate to the correct directory (update to your actual path on Hostinger)
-            cd public_html/your-laravel-folder 
+            cd public_html
             
             # Put application in maintenance mode
             php artisan down || true
@@ -46,7 +46,7 @@ jobs:
             git pull origin main
             
             # Install/update composer dependencies
-            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --ignore-platform-reqs
             
             # Clear caches
             php artisan cache:clear
