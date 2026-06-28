@@ -1,23 +1,21 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SimulatorController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    $src = 'C:/Users/vikas/.gemini/antigravity-ide/brain/511b8773-61dd-450f-9b0d-71fca45bd9cc/rooftop_party_1782624976093.png';
-    $dest = public_path('rooftop_party.png');
-    if (file_exists($src) && !file_exists($dest)) {
-        @copy($src, $dest);
-    }
-    
-    // Copy system.css from Downloads/halo/css
-    $srcCss = 'C:/Users/vikas/Downloads/halo/css/system.css';
-    $destCss = public_path('css/system.css');
-    if (file_exists($srcCss)) {
-        if (!is_dir(public_path('css'))) {
-            @mkdir(public_path('css'), 0755, true);
-        }
-        @copy($srcCss, $destCss);
-    }
-    
-    return view('welcome');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/simulate', [SimulatorController::class, 'run'])->middleware('throttle:30,1');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+require __DIR__.'/auth.php';

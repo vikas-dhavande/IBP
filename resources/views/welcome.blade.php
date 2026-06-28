@@ -295,17 +295,25 @@
             gap: 18px;
             min-height: 100%;
             text-align: left;
-            transition: border-color var(--motion-base) var(--easing-standard);
+            transition: border-color var(--motion-base) var(--easing-standard), transform var(--motion-base) var(--easing-standard), box-shadow var(--motion-base) var(--easing-standard);
+            will-change: transform, box-shadow;
         }
         .comp-card:hover {
             border-color: var(--color-border-strong);
+            transform: translateY(-6px);
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12);
         }
         .comp-card .icon-wrapper {
             width: 44px; height: 44px;
-            border-radius: 10px;
+            border-radius: 14px;
             background: var(--color-primary-soft);
             color: var(--color-primary);
             display: flex; align-items: center; justify-content: center;
+            transition: transform var(--motion-base) var(--easing-standard), box-shadow var(--motion-base) var(--easing-standard);
+        }
+        .comp-card:hover .icon-wrapper {
+            transform: scale(1.05);
+            box-shadow: 0 16px 40px rgba(91, 107, 255, 0.14);
         }
     </style>
 </head>
@@ -340,8 +348,12 @@
                     </button>
                 </div>
 
-                <a href="#" class="hidden sm:inline-flex btn btn-tertiary btn-sm">Sign In</a>
-                <a href="#membership" class="btn btn-primary btn-sm">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="hidden sm:inline-flex btn btn-tertiary btn-sm">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="hidden sm:inline-flex btn btn-tertiary btn-sm">Sign In</a>
+                @endauth
+                <a href="{{ route('home') }}#membership" class="btn btn-primary btn-sm">
                     Join Free
                     <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -375,15 +387,15 @@
                     </div>
                     <div class="hero-meta">
                         <div class="meta-item">
-                            <span class="num">10,000+</span>
+                            <span class="num">{{ number_format($stats['users']) }}+</span>
                             <span class="lbl">Members</span>
                         </div>
                         <div class="meta-item">
-                            <span class="num">250+</span>
+                            <span class="num">{{ number_format($stats['events']) }}+</span>
                             <span class="lbl">Events</span>
                         </div>
                         <div class="meta-item">
-                            <span class="num">30+</span>
+                            <span class="num">{{ number_format($stats['cities']) }}+</span>
                             <span class="lbl">Cities</span>
                         </div>
                     </div>
@@ -455,51 +467,63 @@
             </div>
         </section>
 
-        <!-- Features / Event Categories Section -->
+        <!-- Social Media Section -->
         <section id="events" class="section border-t border-[var(--color-border)] bg-[var(--color-surface)]/20 transition-colors duration-300">
             <div class="container">
                 <header class="section-head">
-                    <span class="eyebrow">Event Styles</span>
-                    <h2>Find Your Perfect Vibe</h2>
-                    <p>From cozy rooftop gatherings to wild camping trips, we design curated environments for bachelors to connect and unwind.</p>
+                    <span class="eyebrow">Social Access</span>
+                    <h2>Stay Connected Across Every Platform</h2>
+                    <p>Follow BPI Club on social media for event drops, community stories, exclusive offers, and behind-the-scenes updates.</p>
                 </header>
 
                 <div class="comp-grid">
-                    <!-- Feature 1 -->
-                    <div class="comp-card" style="grid-column: span 4">
-                        <div class="icon-wrapper">
-                            <!-- Star/Party icon -->
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                    <a href="https://www.instagram.com" target="_blank" rel="noreferrer" class="comp-card group hover:border-indigo-500" style="grid-column: span 4">
+                        <div class="icon-wrapper bg-gradient-to-br from-fuchsia-500 via-pink-500 to-orange-400 text-white">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.75 2h8.5C19.098 2 21 3.902 21 6.75v8.5C21 18.098 19.098 20 16.25 20h-8.5C4.902 20 3 18.098 3 15.25v-8.5C3 3.902 4.902 2 7.75 2zm8.5 1.5h-8.5A2.25 2.25 0 005.5 5.75v8.5A2.25 2.25 0 007.75 16.5h8.5a2.25 2.25 0 002.25-2.25v-8.5A2.25 2.25 0 0016.25 3.5zM12 7.25a4.75 4.75 0 110 9.5 4.75 4.75 0 010-9.5zm0 1.5a3.25 3.25 0 100 6.5 3.25 3.25 0 000-6.5zm4.75-.75a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
                         </div>
-                        <h3 class="t-title-md font-bold">Premium Parties</h3>
-                        <p class="t-body-sm leading-relaxed">
-                            Exclusive access to pool parties, villa takeovers, rooftop gatherings, and curated pub crawls in top tier clubs.
-                        </p>
-                    </div>
+                        <h3 class="t-title-md font-bold mt-4">Instagram</h3>
+                        <p class="t-body-sm leading-relaxed text-slate-600 dark:text-slate-400">See event previews, reels, and community highlights from every BPI experience.</p>
+                    </a>
 
-                    <!-- Feature 2 -->
-                    <div class="comp-card" style="grid-column: span 4">
-                        <div class="icon-wrapper">
-                            <!-- Compass/Travel icon -->
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
+                    <a href="https://www.facebook.com" target="_blank" rel="noreferrer" class="comp-card group hover:border-blue-500" style="grid-column: span 4">
+                        <div class="icon-wrapper bg-blue-600 text-white">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.07C22 6.49 17.52 2 11.93 2S1.86 6.49 1.86 12.07c0 4.97 3.64 9.08 8.38 9.86v-6.99H8.33v-2.87h1.91V10.4c0-1.9 1.13-2.95 2.86-2.95.83 0 1.69.15 1.69.15v1.86h-.96c-.95 0-1.25.59-1.25 1.19v1.44h2.12l-.34 2.87h-1.78v6.99c4.74-.78 8.38-4.89 8.38-9.86z"/></svg>
                         </div>
-                        <h3 class="t-title-md font-bold">Weekend Getaways</h3>
-                        <p class="t-body-sm leading-relaxed">
-                            Road trips, forest camping, surfing trips in Goa, and mountain treks designed for adventure seekers.
-                        </p>
-                    </div>
+                        <h3 class="t-title-md font-bold mt-4">Facebook</h3>
+                        <p class="t-body-sm leading-relaxed text-slate-600 dark:text-slate-400">Join our event community feed, RSVP to meetups, and share the latest party moments.</p>
+                    </a>
 
-                    <!-- Feature 3 -->
-                    <div class="comp-card" style="grid-column: span 4">
-                        <div class="icon-wrapper">
-                            <!-- Chats/Social icon -->
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
+                    <a href="https://twitter.com" target="_blank" rel="noreferrer" class="comp-card group hover:border-sky-500" style="grid-column: span 4">
+                        <div class="icon-wrapper bg-sky-500 text-white">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 3a10.9 10.9 0 01-3.14.86A4.48 4.48 0 0022.43 1a9.05 9.05 0 01-2.88 1.1A4.52 4.52 0 0016.63 0c-2.5 0-4.5 2.03-4.5 4.55 0 .36.04.71.12 1.04A12.86 12.86 0 011.64 1.44a4.5 4.5 0 00-.61 2.29c0 1.58.8 2.98 2.03 3.8A4.51 4.51 0 012 6.9v.06c0 2.2 1.56 4.03 3.64 4.45a4.46 4.46 0 01-2.04.08 4.51 4.51 0 004.2 3.13A9.05 9.05 0 010 19.54a12.8 12.8 0 006.92 2.04c8.3 0 12.84-6.98 12.84-13.03 0-.2 0-.39-.01-.58A9.18 9.18 0 0023 3z"/></svg>
                         </div>
-                        <h3 class="t-title-md font-bold">Social Mixers</h3>
-                        <p class="t-body-sm leading-relaxed">
-                            Structured offline meetups, board game nights, coffee socials, and private network groups for working professionals.
-                        </p>
-                    </div>
+                        <h3 class="t-title-md font-bold mt-4">X</h3>
+                        <p class="t-body-sm leading-relaxed text-slate-600 dark:text-slate-400">Get live updates, ticket drops, and the latest buzz from the BPI event scene.</p>
+                    </a>
+
+                    <a href="https://www.youtube.com" target="_blank" rel="noreferrer" class="comp-card group hover:border-red-500" style="grid-column: span 4">
+                        <div class="icon-wrapper bg-red-600 text-white">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 15l5-3-5-3v6zm11.23-2.12c.13-.89.13-2.18.13-2.18s0-1.3-.13-2.18c-.15-1.05-.6-1.9-1.45-2.15-.96-.28-4.82-.28-4.82-.28s-3.86 0-4.82.28c-.85.25-1.3 1.1-1.45 2.15-.13.89-.13 2.18-.13 2.18s0 1.3.13 2.18c.15 1.05.6 1.9 1.45 2.15.96.28 4.82.28 4.82.28s3.86 0 4.82-.28c.85-.25 1.3-1.1 1.45-2.15z"/></svg>
+                        </div>
+                        <h3 class="t-title-md font-bold mt-4">YouTube</h3>
+                        <p class="t-body-sm leading-relaxed text-slate-600 dark:text-slate-400">Watch event trailers, highlight reels, and the best moments from our community nights.</p>
+                    </a>
+
+                    <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" class="comp-card group hover:border-slate-700" style="grid-column: span 4">
+                        <div class="icon-wrapper bg-slate-900 text-white">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 11-.002 5.001A2.5 2.5 0 014.98 3.5zM3 9h3.96v12H3V9zm6.5 0H14v1.71h.06c.48-.91 1.66-1.88 3.42-1.88 3.66 0 4.34 2.41 4.34 5.55V21h-3.96v-5.69c0-1.36-.03-3.11-1.9-3.11-1.9 0-2.19 1.48-2.19 3.01V21H9.5V9z"/></svg>
+                        </div>
+                        <h3 class="t-title-md font-bold mt-4">LinkedIn</h3>
+                        <p class="t-body-sm leading-relaxed text-slate-600 dark:text-slate-400">Connect professionally and find networking events for working bachelors.</p>
+                    </a>
+
+                    <a href="https://wa.me/" target="_blank" rel="noreferrer" class="comp-card group hover:border-emerald-500" style="grid-column: span 4">
+                        <div class="icon-wrapper bg-emerald-500 text-white">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.1-.472-.148-.672.149-.198.297-.768.967-.942 1.165-.173.198-.347.223-.644.075-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.173.198-.297.298-.495.1-.198.05-.372-.025-.52-.075-.148-.672-1.612-.92-2.207-.242-.58-.487-.5-.672-.51l-.573-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.476 0 1.46 1.065 2.876 1.213 3.074.149.198 2.097 3.2 5.077 4.486.71.306 1.262.488 1.692.625.71.225 1.355.194 1.865.118.57-.085 1.758-.718 2.005-1.41.248-.692.248-1.286.173-1.414-.074-.128-.273-.198-.57-.347zM12.003 2.088C6.476 2.088 2.09 6.473 2.09 12c0 1.771.467 3.487 1.357 4.998L2 22l5.125-1.376A9.906 9.906 0 0012.003 21.91c5.528 0 9.913-4.385 9.913-9.913 0-5.527-4.385-9.909-9.913-9.909z"/></svg>
+                        </div>
+                        <h3 class="t-title-md font-bold mt-4">WhatsApp</h3>
+                        <p class="t-body-sm leading-relaxed text-slate-600 dark:text-slate-400">Chat with event support, ask questions, and stay on top of group meetups.</p>
+                    </a>
                 </div>
             </div>
         </section>
@@ -733,36 +757,7 @@
         const termContent = document.getElementById('terminal-content');
         const termCursor = document.getElementById('terminal-cursor');
         
-        const commands = {
-            email: [
-                { text: '$ php artisan dispatch:event InviteBachelorsEvent --id=102', delay: 100 },
-                { text: '[INFO] Dispatching event: App\\Events\\InviteBachelorsEvent', delay: 500 },
-                { text: '[INFO] Compiling guestlist from Mumbai & Pune regions...', delay: 300 },
-                { text: '[INFO] Dispatching 124 invites to queued emails...', delay: 400 },
-                { text: '[SUCCESS] Invites pushed to mail gateway queue. Job ID: 887212', delay: 300 },
-                { text: '[INFO] Processing job: App\\Jobs\\SendQueuedInvites (ID: 887212)', delay: 500 },
-                { text: '[SUCCESS] Mail notifications dispatched to guests successfully.', delay: 400 }
-            ],
-            schema: [
-                { text: '$ php artisan inspect:database --table=events', delay: 100 },
-                { text: '[INFO] Scanning event metadata schema structures...', delay: 600 },
-                { text: '[INFO] Found table columns: id, name, location, price, max_seats, date, created_at', delay: 300 },
-                { text: '[INFO] Status: Database tables indexing matching all constraints.', delay: 400 },
-                { text: '[SUCCESS] DB metadata analysis successfully complete.', delay: 200 }
-            ],
-            test: [
-                { text: '$ php artisan test --filter=EventBookingTest', delay: 100 },
-                { text: '   INFO  Running tests...', delay: 400 },
-                { text: '  ✓ App\\Tests\\Feature\\EventBookingTest > user_can_book_available_seat', delay: 300 },
-                { text: '  ✓ App\\Tests\\Feature\\EventBookingTest > user_cannot_book_filled_seats', delay: 200 },
-                { text: '', delay: 100 },
-                { text: '  Tests:    2 passed (2 assertions)', delay: 100 },
-                { text: '  Duration: 0.12s', delay: 100 },
-                { text: '[SUCCESS] All execution validation tests completed.', delay: 200 }
-            ]
-        };
-
-        function runCommand(key) {
+        async function runCommand(key) {
             // Update Active button state in Sidebar
             const buttons = document.querySelectorAll('.cmd-btn');
             buttons.forEach(btn => {
@@ -777,43 +772,57 @@
             termContent.appendChild(termCursor);
             termCursor.className = 'text-[var(--color-primary)] font-semibold cursor-blink';
 
-            let lineIndex = 0;
-            const lines = commands[key];
-
-            function addNextLine() {
-                if (lineIndex >= lines.length) {
-                    buttons.forEach(btn => btn.classList.remove('opacity-50', 'pointer-events-none'));
-                    termCursor.className = 'text-[var(--color-primary)] font-semibold cursor-blink';
-                    return;
-                }
-
-                const lineData = lines[lineIndex];
-                const newLine = document.createElement('div');
+            try {
+                const response = await fetch('/simulate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ command: key })
+                });
                 
-                if (lineData.text.startsWith('$')) {
-                    newLine.className = 'text-slate-800 dark:text-slate-300 font-bold mt-3 mb-1';
-                    termCursor.className = 'text-[var(--color-primary)] font-semibold';
-                } else if (lineData.text.includes('[SUCCESS]')) {
-                    newLine.className = 'text-emerald-600 dark:text-emerald-400';
-                } else if (lineData.text.includes('[WARNING]')) {
-                    newLine.className = 'text-amber-600 dark:text-amber-400';
-                } else if (lineData.text.includes('✓')) {
-                    newLine.className = 'text-emerald-600 dark:text-emerald-400 pl-2';
-                } else if (lineData.text.includes('passed')) {
-                    newLine.className = 'text-emerald-600 dark:text-emerald-400 font-bold mt-2';
-                } else {
-                    newLine.className = 'text-slate-500 dark:text-slate-400';
+                const data = await response.json();
+                const lines = data.lines;
+                let lineIndex = 0;
+
+                function addNextLine() {
+                    if (lineIndex >= lines.length) {
+                        buttons.forEach(btn => btn.classList.remove('opacity-50', 'pointer-events-none'));
+                        termCursor.className = 'text-[var(--color-primary)] font-semibold cursor-blink';
+                        return;
+                    }
+
+                    const lineData = lines[lineIndex];
+                    const newLine = document.createElement('div');
+                    
+                    if (lineData.text.startsWith('$')) {
+                        newLine.className = 'text-slate-800 dark:text-slate-300 font-bold mt-3 mb-1';
+                        termCursor.className = 'text-[var(--color-primary)] font-semibold';
+                    } else if (lineData.text.includes('[SUCCESS]')) {
+                        newLine.className = 'text-emerald-600 dark:text-emerald-400';
+                    } else if (lineData.text.includes('[WARNING]')) {
+                        newLine.className = 'text-amber-600 dark:text-amber-400';
+                    } else if (lineData.text.includes('✓')) {
+                        newLine.className = 'text-emerald-600 dark:text-emerald-400 pl-2';
+                    } else if (lineData.text.includes('passed')) {
+                        newLine.className = 'text-emerald-600 dark:text-emerald-400 font-bold mt-2';
+                    } else {
+                        newLine.className = 'text-slate-500 dark:text-slate-400';
+                    }
+
+                    newLine.textContent = lineData.text;
+                    termContent.insertBefore(newLine, termCursor);
+                    termContent.scrollTop = termContent.scrollHeight;
+
+                    lineIndex++;
+                    setTimeout(addNextLine, lineData.delay);
                 }
 
-                newLine.textContent = lineData.text;
-                termContent.insertBefore(newLine, termCursor);
-                termContent.scrollTop = termContent.scrollHeight;
-
-                lineIndex++;
-                setTimeout(addNextLine, lineData.delay);
+                addNextLine();
+            } catch (error) {
+                console.error("Simulation error:", error);
+                buttons.forEach(btn => btn.classList.remove('opacity-50', 'pointer-events-none'));
             }
-
-            addNextLine();
         }
 
         // Pricing Script
