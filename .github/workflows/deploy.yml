@@ -22,11 +22,7 @@ jobs:
       - name: Install Dependencies (Composer)
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
 
-      - name: Install NPM Dependencies & Build (Optional)
-        run: |
-          npm install
-          npm run build
-        # Remove this step if you don't use NPM/Vite or prefer building on the server
+
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
